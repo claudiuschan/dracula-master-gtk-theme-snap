@@ -10,6 +10,6 @@ To connect the theme to all apps which have available plugs to gtk-common-themes
 `for i in $(snap connections | grep gtk-common-themes:icon-themes | awk '{print $2}'); do sudo snap connect $i dracula-gtk-theme:icon-themes; done`
 
 
-Based on the theme port from:
-https://gitlab.com/spider623/whitesur-snap
+Based on the theme port from:\
+https://gitlab.com/spider623/whitesur-snap \
 https://gitlab.com/sundbp/dracula-theme-snap
