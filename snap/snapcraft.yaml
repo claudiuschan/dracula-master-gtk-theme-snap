@@ -1,0 +1,71 @@
+name: dracula-master-gtk-theme
+base: core22
+version: '4.0.0'
+summary: Dracula master port.
+description: |
+  Dracula master gtk theme packages as a snap.
+
+  Port based on the theme port from  https://github.com/dracula
+
+  This port is based on sundbp (https://gitlab.com/sundbp/dracula-theme-snap) from gitlab.com.
+
+  To connect the theme to all apps which have available plugs to gtk-common-themes you can run:
+
+  `for i in $(snap connections | grep gtk-common-themes:gtk-3-themes | awk '{print $2}'); do sudo snap connect $i dracula-master-gtk-theme:gtk-3-themes; done`
+
+  `for i in $(snap connections | grep gtk-common-themes:icon-themes | awk '{print $2}'); do sudo snap connect $i dracula-master-gtk-theme:icon-themes; done`
+
+
+grade: stable
+confinement: strict
+
+slots:
+  gtk-3-themes:
+    interface: content
+    source:
+      read:
+        - $SNAP/share/themes/Dracula
+  gtk-2-themes:
+    interface: content
+    source:
+      read:
+        - $SNAP/share/themes/Dracula
+  icon-themes:
+    interface: content
+    source:
+      read:
+        - $SNAP/share/icons/Dracula
+
+parts:
+  dracula-gtk-theme:
+    # See 'snapcraft plugins'
+    after: [utils]
+    plugin: nil
+    source: https://github.com/dracula/gtk/archive/master.zip
+    source-type: zip
+    override-build: |
+        mkdir -p $SNAPCRAFT_PART_INSTALL/share/themes/Dracula
+        cp -r gtk-master/* $SNAPCRAFT_PART_INSTALL/share/themes/Dracula/
+    stage:
+      - share/themes/Dracula
+
+    # icon theme
+  dracula-icon-theme:
+    after: [utils]
+    plugin: nil
+    source: https://github.com/dracula/gtk/files/5214870/Dracula.zip
+    source-type: zip
+    override-build: |
+        mkdir -p $SNAPCRAFT_PART_INSTALL/share/icons/
+        cp -r Dracula $SNAPCRAFT_PART_INSTALL/share/icons/
+    stage:
+      - share/icons/Dracula
+
+  utils:
+    plugin: dump
+    source: utils
+    prime:
+      - .*
+    build-packages:
+      - gtk-update-icon-cache
+      - libgtk-3-bin
